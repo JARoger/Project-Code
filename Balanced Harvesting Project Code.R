@@ -40,11 +40,13 @@ TotalAbundance <- function(sim) {
 }
 
 
+# Trait-based model
 TP02 <- newTraitParams(no_sp = 12, gear_names = "None", knife_edge_size = NA, min_w_inf = 30, max_w_inf = 40000)
 TP02St <- projectToSteady(TP02)
+# Trait-based unfished model
 TP02Pr <- project(TP02St, t_max = 300, effort = 0)
 
-
+# Trait-based BH(Min) 
 BHMinTP02 <- TP02St
 BHMinTP02@gear_params$knife_edge_size <- 0.001
 BHMinTP02@species_params$knife_edge_size <- 0.001
@@ -54,9 +56,10 @@ BHMinTP02 <- setRateFunction(BHMinTP02, "FMort", "productionFMort")
 BHMinTP02 <- setFishing(BHMinTP02, initial_effort = 8.58e2)
 BHMinTP02Pr <- project(BHMinTP02, t_max = 300)
 
-TotalYield(BHMinTP02Pr)[301] #0.01000258
-TotalYield(BHMinTP02Pr)[201] #0.01000258 
+#TotalYield(BHMinTP02Pr)[301] #0.01000258
+#TotalYield(BHMinTP02Pr)[201] #0.01000258 
 
+# Trait-based BH(Mat)
 BHMatTP02 <- TP02St
 BHMatTP02@gear_params$knife_edge_size <- BHMatTP02@species_params$w_mat
 BHMatTP02@species_params$knife_edge_size <- BHMatTP02@species_params$w_mat
@@ -66,9 +69,10 @@ BHMatTP02 <- setRateFunction(BHMatTP02, "FMort", "productionFMort")
 BHMatTP02 <- setFishing(BHMatTP02, initial_effort = 2.465e3)
 BHMatTP02Pr <- project(BHMatTP02, t_max = 300)
 
-TotalYield(BHMatTP02Pr)[301] #0.0100047
-TotalYield(BHMatTP02Pr)[201] #0.0100047
+#TotalYield(BHMatTP02Pr)[301] #0.0100047
+#TotalYield(BHMatTP02Pr)[201] #0.0100047
 
+#Trait-based BH(Fix)
 BHFixTP02 <- TP02St
 BHFixTP02@gear_params$knife_edge_size <- 10
 BHFixTP02@species_params$knife_edge_size <- 10
@@ -78,9 +82,10 @@ BHFixTP02 <- setRateFunction(BHFixTP02, "FMort", "productionFMort")
 BHFixTP02 <- setFishing(BHFixTP02, initial_effort = 1.259e3)
 BHFixTP02Pr <- project(BHFixTP02, t_max = 300)
 
-TotalYield(BHFixTP02Pr)[301] #0.01000667 
-TotalYield(BHFixTP02Pr)[201] #0.01000667 
+#TotalYield(BHFixTP02Pr)[301] #0.01000667 
+#TotalYield(BHFixTP02Pr)[201] #0.01000667 
 
+# Trait-based SAE(Mat)
 SAEMatTP02 <- TP02St
 SAEMatTP02@gear_params$knife_edge_size <- SAEMatTP02@species_params$w_mat
 SAEMatTP02@species_params$knife_edge_size <- SAEMatTP02@species_params$w_mat
@@ -88,9 +93,10 @@ gear_params(SAEMatTP02)$gear <- "maturity"
 species_params(SAEMatTP02)$gear <- "maturity"
 SAEMatTP02Pr <- project(SAEMatTP02, t_max = 300, effort = 0.6765)
 
-TotalYield(SAEMatTP02Pr)[301] #0.01000488
-TotalYield(SAEMatTP02Pr)[201] #0.00999171
+#TotalYield(SAEMatTP02Pr)[301] #0.01000488
+#TotalYield(SAEMatTP02Pr)[201] #0.00999171
 
+# Trait-based SAE(Fix)
 SAEFixTP02 <- TP02St
 gear_params(SAEFixTP02)$gear <- "fixed"
 species_params(SAEFixTP02)$gear <- "fixed"
@@ -98,8 +104,8 @@ gear_params(SAEFixTP02)$knife_edge_size <- 10
 species_params(SAEFixTP02)$knife_edge_size <- 10
 SAEFixTP02Pr <- project(SAEFixTP02, effort = 0.497, t_max = 300)
 
-TotalYield(SAEFixTP02Pr)[301] #0.01000396
-TotalYield(SAEFixTP02Pr)[201] #0.01000694 
+#TotalYield(SAEFixTP02Pr)[301] #0.01000396
+#TotalYield(SAEFixTP02Pr)[201] #0.01000694 
 
 
 plotFMort(SAEMatTP02Pr, time_range = 300)
@@ -128,16 +134,6 @@ legend(x = "topright", inset = c(0.1, 0.025),legend = c("SAE(Mat)","SAE(Fix)","B
 par(mar=c(5, 4, 4, 2) + 0.1, xpd = FALSE)
 
 
-#par(xpd = TRUE, mar = par()$mar + c(0,0,0,0), mfrow = c(2,2))
-#TotYielSAEMatTP <- TotalYield(SAEMatTP02Pr)
-#TotYielSAEFixTP <- TotalYield(SAEFixTP02Pr)
-#TotYielBHMinTP <- TotalYield(BHMinTP02Pr)
-#TotYielBHMatTP <- TotalYield(BHMatTP02Pr)
-#TotYielBHFixTP <- TotalYield(BHFixTP02Pr)
-#matplot(cbind(TotYielSAEMatTP, TotYielSAEFixTP, TotYielBHMinTP, TotYielBHMatTP, TotYielBHFixTP),  
-#        log = "x", type = "l", main = "Total Yield",  
-#        xlab = "Year", ylab = "Yield [g/m^3]", col = c(2,3,4,5,6), lty=c(4,2,1,5,3), 
-#        lwd = 4, bty = "l",cex.main=1.8,cex.axis=1.8,cex.lab=1.5)
 par(mar=c(4,5,2,1))
 layout(matrix(c(1,2,3,3), 2, 2, byrow = TRUE))
 TotBiomTP02 <- TotalBiomass(TP02Pr)
@@ -171,14 +167,6 @@ matplot(cbind(TotAbunTP02,TotAbunSAEMatTP,TotAbunSAEFixTP,TotAbunBHMinTP,TotAbun
         log = "xy", type = "l", main = "Total Abundance",  
         xlab = "Year", ylab = "Abundance [m^-3 year^-1]", col = c(1,2,3,4,5,6), lty=c(2,4,2,1,5,3), 
         lwd = 4, bty = "l",cex.main=1.6,cex.axis=1.5,cex.lab=1.5)
-
-#par(mar=c(5, 4, 4, 2) + 0.1, xpd = FALSE)
-
-#par(fig = c(0, 1, 0, 1), oma = c(0, 0, 0, 0), mar = c(0, 0, 0, 0), new = TRUE)
-#plot(0, 0, type = "n", bty = "n", xaxt = "n", yaxt = "n")
-#legend(x = "bottomright", inset = c(0,0),legend = c("No fishing", "SAE(Mat)","SAE(Fix)","BH(Min)", "BH(Mat)","BH(Fix)"),
-#       lty = c(2,4,2,1,5,3), col = c(1,2,3,4,5,6), lwd = 4, cex = 1.4, title = "Fishing method", 
-#       horiz = FALSE, bty = "o", text.font = 1,text.width = 0.15, title.adj = 0)
 
 
 BiomPropTable3 = data.table(Species = c(TP02@species_params$species[1:12]), 
@@ -221,14 +209,15 @@ RelBiomTable3
 
 
 
-
+# North Sea Multispecies model
 NS_params02 <- NS_params
 gear_params(NS_params02)$gear <- "None"
 species_params(NS_params02)$gear <- "None"
 NSP02St <- projectToSteady(NS_params02, effort = 0)
+# NS unfished model
 NSP02Pr <- project(NSP02St, t_max = 300, effort = 0)
 
-
+# NS BH(Min)
 NSP02BHMin <- NSP02St
 gear_params(NSP02BHMin)$gear <- "balanced"
 species_params(NSP02BHMin)$gear <- "balanced"
@@ -237,9 +226,10 @@ NSP02BHMin <- setFishing(NSP02BHMin, initial_effort = 1.6137e-12)
 NSP02BHMin <- setRateFunction(NSP02BHMin, "FMort", "productionFMort")
 NSP02BHMinPr <- project(NSP02BHMin, t_max = 300)
 
-TotalYield(NSP02BHMinPr)[301] #1.500037e+12
-TotalYield(NSP02BHMinPr)[51] #1.500391e+12
+#TotalYield(NSP02BHMinPr)[301] #1.500037e+12
+#TotalYield(NSP02BHMinPr)[51] #1.500391e+12
 
+# NS BH(Mat) 
 NSP02BHMat <- NSP02St
 gear_params(NSP02BHMat)$gear <- "balanced"
 species_params(NSP02BHMat)$gear <- "balanced"
@@ -249,9 +239,10 @@ NSP02BHMat <- setFishing(NSP02BHMat, initial_effort = 5.032e-12)
 NSP02BHMat <- setRateFunction(NSP02BHMat, "FMort", "productionFMort")
 NSP02BHMatPr <- project(NSP02BHMat, t_max = 300)
 
-TotalYield(NSP02BHMatPr)[301] #1.500011e+12
-TotalYield(NSP02BHMatPr)[51] #1.502019e+12
+#TotalYield(NSP02BHMatPr)[301] #1.500011e+12
+#TotalYield(NSP02BHMatPr)[51] #1.502019e+12
 
+# NS BH(Fix)
 NSP02BHFix <- NSP02St
 gear_params(NSP02BHFix)$gear <- "balanced"
 species_params(NSP02BHFix)$gear <- "balanced"
@@ -261,18 +252,20 @@ NSP02BHFix <- setFishing(NSP02BHFix, initial_effort = 1.7679e-12)
 NSP02BHFix <- setRateFunction(NSP02BHFix, "FMort", "productionFMort")
 NSP02BHFixPr <- project(NSP02BHFix, t_max = 300)
 
-TotalYield(NSP02BHFixPr)[301] #1.500029e+12 
-TotalYield(NSP02BHFixPr)[51] #1.50174e+12
+#TotalYield(NSP02BHFixPr)[301] #1.500029e+12 
+#TotalYield(NSP02BHFixPr)[51] #1.50174e+12
 
+# NS SAE(Mat)
 NSP02SAEMat <- NSP02St
 gear_params(NSP02SAEMat)$gear <- "maturation"
 species_params(NSP02SAEMat)$gear <- "maturation"
 gear_params(NSP02SAEMat)$knife_edge_size <- species_params(NSP02SAEMat)$w_mat
 NSP02SAEMatPr <- project(NSP02SAEMat, effort = 0.2924, t_max = 300)
 
-TotalYield(NSP02SAEMatPr)[301] #1.500028e+12 
-TotalYield(NSP02SAEMatPr)[51] #1.500029e+12 
+#TotalYield(NSP02SAEMatPr)[301] #1.500028e+12 
+#TotalYield(NSP02SAEMatPr)[51] #1.500029e+12 
 
+# NS SAE(Fix)
 NSP02SAEFix <- NSP02St
 gear_params(NSP02SAEFix)$gear <- "fixed"
 species_params(NSP02SAEFix)$gear <- "fixed"
@@ -280,8 +273,9 @@ gear_params(NSP02SAEFix)$knife_edge_size <- 10
 species_params(NSP02SAEFix)$knife_edge_size <- 10
 NSP02SAEFixPr <- project(NSP02SAEFix, effort = 0.19896, t_max = 300)
 
-TotalYield(NSP02SAEFixPr)[301] #1.500004e+12
-TotalYield(NSP02SAEFixPr)[51] #1.500005e+12
+#TotalYield(NSP02SAEFixPr)[301] #1.500004e+12
+#TotalYield(NSP02SAEFixPr)[51] #1.500005e+12
+
 
 plotFMort(NSP02SAEMatPr, time_range = 300)
 plotFMort(NSP02SAEFixPr, time_range = 300)
@@ -308,16 +302,7 @@ legend(x = "topright", inset = c(0.1, 0.025),legend = c("SAE(Mat)","SAE(Fix)","B
        lty = c(4,2,1,5,3), col = c(2,3,4,5,6), lwd = 3, cex = 1.2, title = "Fishing method")
 par(mar=c(5, 4, 4, 2) + 0.1, xpd = FALSE)
 
-#par(xpd = TRUE, mar = par()$mar + c(0,0,0,0), mfrow = c(2,2))
-#TotYielNSPSAEMat <- TotalYield(NSP02SAEMatPr)
-#TotYielNSPSAEFix <- TotalYield(NSP02SAEFixPr)
-#TotYielNSPBHMin <- TotalYield(NSP02BHMinPr)
-#TotYielNSPBHMat <- TotalYield(NSP02BHMatPr)
-#TotYielNSPBHFix <- TotalYield(NSP02BHFixPr)
-#matplot(cbind(TotYielNSPSAEMat, TotYielNSPSAEFix, TotYielNSPBHMin, TotYielNSPBHMat, TotYielNSPBHFix), 
-#        log = "xy", type = "l", main = "Total Yield",  
-#        xlab = "Year", ylab = "Yield [g]", col = c(2,3,4,5,6), lty=c(4,2,1,5,3), 
-#        lwd = 4, bty = "l",cex.main=1.8,cex.axis=1.8,cex.lab=1.5)
+
 par(mar=c(4,5,2,1))
 layout(matrix(c(1,2,3,3), 2, 2, byrow = TRUE))
 TotBiomNSP02 <- TotalBiomass(NSP02Pr)
